@@ -1,29 +1,28 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
+
 import ListItemText from '@mui/material/ListItemText';
-import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import '@fontsource/roboto/400.css';
-import WaterIcon from '@mui/icons-material/Water';
-import InvertColorsIcon from '@mui/icons-material/InvertColors';
+import { ListItemAvatar } from '@mui/material';
+import { Context } from '../context/Context';
 
 const drawerWidth = 240;
 
 function Dashboard(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const ctx = useContext(Context);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -34,26 +33,25 @@ function Dashboard(props) {
       <Toolbar />
       <Divider />
       <List>
-        {['Discharge', 'precipitation'].map((text, index) => (
-          <ListItem key={text} disablePadding>
+        {ctx.parameters.map((parameter, index) => (
+          <ListItem
+            divider={index < ctx.parameters.length - 1}
+            key={parameter.id}
+            disablePadding
+          >
             <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <WaterIcon /> : <InvertColorsIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['Air'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <WaterIcon /> : <InvertColorsIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemAvatar>
+                <img
+                  alt={parameter.name}
+                  src={parameter.imageUrl}
+                  style={{
+                    height: 45,
+                    width: 45,
+                    borderRadius: '25%',
+                  }}
+                />
+              </ListItemAvatar>
+              <ListItemText primary={parameter.name} />
             </ListItemButton>
           </ListItem>
         ))}
