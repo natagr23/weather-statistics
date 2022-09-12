@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "name": "Discharge",
+    "go": ""
+  },
+  {
+    "id": 2,
+    "name": "Precipitation",
+    "go": ""
+  },
+  {
+    "id": 3,
+    "name": "Air Pollution",
+    "go": ""
+  }
+]
