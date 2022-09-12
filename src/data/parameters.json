@@ -3,18 +3,18 @@
     "id": 1,
     "name": "Discharge",
     "imageUrl": "https://source.unsplash.com/1600x900/?stream",
-    "go": ""
+    "go": "../../pages/GraphPage"
   },
   {
     "id": 2,
     "name": "Precipitation",
     "imageUrl": "https://source.unsplash.com/1600x900/?precipitation",
-    "go": ""
+    "go": "../../pages/GraphPage"
   },
   {
     "id": 3,
     "name": "Air Pollution",
     "imageUrl": "https://source.unsplash.com/1600x900/?air",
-    "go": ""
+    "go": "../../pages/GraphPage"
   }
 ]

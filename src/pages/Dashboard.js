@@ -8,7 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-
+import HomeIcon from '@mui/icons-material/Home';
 import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
@@ -16,6 +16,7 @@ import Typography from '@mui/material/Typography';
 import '@fontsource/roboto/400.css';
 import { ListItemAvatar } from '@mui/material';
 import { Context } from '../context/Context';
+import { Link } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -30,16 +31,43 @@ function Dashboard(props) {
 
   const drawer = (
     <div>
+      <IconButton
+        color="secondary"
+        size="small"
+        component={Link}
+        to={'/pages/index'}
+      >
+        <HomeIcon />
+      </IconButton>
       <Toolbar />
       <Divider />
-      <List>
+      <List
+        sx={{
+          background: '#6b34a6',
+        }}
+      >
         {ctx.parameters.map((parameter, index) => (
           <ListItem
             divider={index < ctx.parameters.length - 1}
             key={parameter.id}
             disablePadding
           >
-            <ListItemButton>
+            <ListItemButton
+              component={Link}
+              to={parameter.go}
+              display="flex"
+              justifycontent="center"
+              alignItems="center"
+              minheight="5vh"
+              maxwidth="50"
+              sx={{
+                background: 'rgb(255, 246, 241)',
+                borderRadius: '4%',
+                minheight: 48,
+                //  justifycontent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+            >
               <ListItemAvatar>
                 <img
                   alt={parameter.name}
@@ -56,6 +84,7 @@ function Dashboard(props) {
           </ListItem>
         ))}
       </List>
+      <Divider />
     </div>
   );
 
