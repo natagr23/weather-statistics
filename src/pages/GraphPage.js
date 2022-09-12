@@ -18,7 +18,7 @@ const GraphPage = () => {
         sx={{
           width: { sm: `calc(100% - ${240}px)` },
           ml: { sm: `${240}px` },
-          background: 'rgb(255, 246, 241)',
+          background: '#ff00ff00',
         }}
       >
         <Container>
@@ -27,16 +27,16 @@ const GraphPage = () => {
             justifycontent="center"
             alignItems="center"
             // minHeight="25vh"
-            sx={{
-              background: 'rgb(255, 246, 241)',
-            }}
           >
             <Typography sx={{ m: 1 }} variant="h5">
-              Historical Photos from {`${ctx.name}`} - Fotos Históricas de{' '}
-              {`${ctx.name}`}
+              Historical Photos from {`${ctx.nameParameter}`} - Fotos Históricas
+              de {`${ctx.nameParameter}`}
             </Typography>
           </Box>
-
+          <Typography paragraph>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod
+          </Typography>
           <Box
             sx={{
               display: 'flex',

@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard';
 import GraphPage from './pages/GraphPage';
 import { ContextProvider } from './context/Context';
 import { Outlet } from 'react-router-dom';
+import About from './pages/About';
 
 function App() {
   return (
@@ -12,7 +13,10 @@ function App() {
         <ContextProvider>
           <Dashboard />
           <Routes>
-            <Route path="/" element={[<Dashboard />]} />
+            <Route
+              path="/"
+              element={[<About />, <Dashboard />, <GraphPage />]}
+            />
             <Route path="/pages/GraphPage" element={[<GraphPage />]} />
           </Routes>
           <Outlet />

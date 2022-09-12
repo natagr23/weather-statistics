@@ -30,20 +30,15 @@ function Dashboard(props) {
   };
 
   const drawer = (
-    <div>
-      <IconButton
-        color="secondary"
-        size="small"
-        component={Link}
-        to={'/pages/index'}
-      >
+    <>
+      <IconButton color="primary" component={Link} to={'/'}>
         <HomeIcon />
       </IconButton>
       <Toolbar />
       <Divider />
       <List
         sx={{
-          background: '#6b34a6',
+          background: '#ff00ff00',
         }}
       >
         {ctx.parameters.map((parameter, index) => (
@@ -55,13 +50,14 @@ function Dashboard(props) {
             <ListItemButton
               component={Link}
               to={parameter.go}
+              onClick={() => ctx.getName(parameter.name)}
               display="flex"
               justifycontent="center"
               alignItems="center"
               minheight="5vh"
               maxwidth="50"
               sx={{
-                background: 'rgb(255, 246, 241)',
+                background: '#ff00ff00',
                 borderRadius: '4%',
                 minheight: 48,
                 //  justifycontent: open ? "initial" : "center",
@@ -85,7 +81,7 @@ function Dashboard(props) {
         ))}
       </List>
       <Divider />
-    </div>
+    </>
   );
 
   const container =
@@ -163,16 +159,6 @@ function Dashboard(props) {
         }}
       >
         <Toolbar />
-        <Typography paragraph>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          body1. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
-          blanditiis tenetur unde suscipit, quam beatae rerum inventore
-          consectetur, neque doloribus, cupiditate numquam dignissimos laborum
-          fugiat deleniti? Eum quasi quidem quibusdam.
-        </Typography>
       </Box>
     </Box>
   );
