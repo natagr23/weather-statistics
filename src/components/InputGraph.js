@@ -1,5 +1,7 @@
 //await response.json() graph xy
 
+//https://observablehq.com/@d3/line-with-tooltip
+
 import React, { useState, useEffect } from 'react';
 import * as d3 from 'd3';
 import Box from '@mui/material/Box';
@@ -22,10 +24,9 @@ const style = {
 const InputGraph = () => {
   useEffect(() => {
     let dataSet = [
-      { subject: 'Dogs', count: 150 },
-      { subject: 'Fish', count: 75 },
-      { subject: 'Cats', count: 135 },
-      { subject: 'Bunnies', count: 240 },
+      fetch('http://fews.ideam.gov.co/colombia/jsonH/0021209920Hobs.json').then(
+        (response) => response.json()
+      ),
     ];
 
     d3.select('#pgraphs')
@@ -64,9 +65,9 @@ const InputGraph = () => {
       .delay(300);
 
     // Line Graph
-    let lineData = [];
+    let lineData = [dataSet];
     for (let i = 0; i < 15; i++) {
-      lineData.push({ x: i + 1, y: Math.round(Math.random() * 100) });
+      lineData.push({ x: i + 1, y: dataSet });
     }
 
     let xScale = d3.scaleLinear().domain([0, 15]).range([0, 300]);
