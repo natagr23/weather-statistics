@@ -17,8 +17,8 @@ const style = {
 };
 
 const InputGraph = () => {
-  const [data, setData] = useState('');
-  const [open, setOpen] = React.useState(false);
+  //   const [data, setData] = useState('');
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -30,7 +30,7 @@ const InputGraph = () => {
         'http://fews.ideam.gov.co/colombia/jsonH/0021209920Hobs.json'
       );
       responseJson = await response.json();
-      setData(responseJson.data.split(','));
+      //   setData(responseJson.data.split(','));
     } catch (error) {
       console.error(error);
     }
@@ -39,6 +39,13 @@ const InputGraph = () => {
   return (
     <div>
       <Button onClick={handleOpen}>Open modal</Button>
+      <Button
+        onClick={() => {
+          Levels();
+        }}
+      >
+        view data
+      </Button>
       <Modal
         open={open}
         onClose={handleClose}
