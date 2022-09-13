@@ -1,14 +1,8 @@
 import React, { useContext } from 'react';
-import {
-  Box,
-  Container,
-  Grid,
-  Pagination,
-  Typography,
-  Stack,
-} from '@mui/material';
+import { Box, Container, Typography, Stack } from '@mui/material';
 
 import { Context } from '../context/Context';
+import InputGraph from '../components/InputGraph';
 
 const GraphPage = () => {
   const ctx = useContext(Context);
@@ -44,9 +38,17 @@ const GraphPage = () => {
               pt: 5,
             }}
           >
-            <Stack spacing={2}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifycontent: 'center',
+                pt: 5,
+              }}
+            >
+              {' '}
               <Typography>Page: page1</Typography>
-            </Stack>
+            </Box>
+            <InputGraph />
           </Box>
         </Container>
       </Box>
