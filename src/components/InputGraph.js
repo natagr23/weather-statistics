@@ -2,6 +2,8 @@
 
 //https://observablehq.com/@d3/line-with-tooltip
 
+//https://github.com/jgs982/react-d3js/blob/main/src/App.js
+
 import React, { useState, useEffect } from 'react';
 import * as d3 from 'd3';
 import Box from '@mui/material/Box';
@@ -22,94 +24,85 @@ const style = {
 };
 
 const InputGraph = () => {
-  useEffect(() => {
-    let dataSet = [
-      fetch('http://fews.ideam.gov.co/colombia/jsonH/0021209920Hobs.json').then(
-        (response) => response.json()
-      ),
-    ];
+  var data;
+  var newData = [];
+  const width = 600,
+    height = 250,
+    margin = { top: 20, bottom: 40, right: 20, left: 40 };
+  const onXaxis = 'timestamp',
+    onYaxis = 'temperature';
+  const circleRadius = 3;
 
-    d3.select('#pgraphs')
-      .selectAll('p')
-      .data(dataSet)
-      .enter()
-      .append('p')
-      .text((dt) => dt.subject + ': ' + dt.count);
-
-    // Bar Chart:
-    const getMax = () => {
-      let max = 0;
-      dataSet.forEach((dt) => {
-        if (dt.count > max) {
-          max = dt.count;
-        }
-      });
-      return max;
-    };
-
-    d3.select('#BarChart')
-      .selectAll('div')
-      .data(dataSet)
-      .enter()
-      .append('div')
-      .classed('bar', true)
-      .style('height', `${getMax()}px`);
-
-    d3.select('#BarChart')
-      .selectAll('.bar')
-      .transition()
-      .duration(1000)
-      .style('height', (bar) => `${bar.count}px`)
-      .style('width', '80px')
-      .style('margin-right', '10px')
-      .delay(300);
-
-    // Line Graph
-    let lineData = [dataSet];
-    for (let i = 0; i < 15; i++) {
-      lineData.push({ x: i + 1, y: dataSet });
-    }
-
-    let xScale = d3.scaleLinear().domain([0, 15]).range([0, 300]);
-    let yScale = d3.scaleLinear().domain([0, 100]).range([300, 0]);
-
-    let line = d3
-      .line()
-      .x((dt) => xScale(dt.x))
-      .y((dt) => yScale(dt.y));
-
-    let xAxis = d3.axisBottom(xScale);
-    let yAxis = d3.axisLeft(yScale);
-
-    d3.select('#LineChart')
-      .selectAll('path')
-      .datum(lineData)
-      .attr(
-        'd',
-        d3
-          .line()
-          .x((dt) => xScale(dt.x))
-          .y(yScale(0))
+  const loadData = async () => {
+    data = await d3
+      .csv(
+        'https://vizhub.com/curran/datasets/temperature-in-san-francisco.csv'
       )
-      .attr('stroke', 'blue')
-      .attr('fill', 'none');
+      //https://vizhub.com/curran/datasets/temperature-in-san-francisco.csv
+      //https://vizhub.com/curran/datasets/data-canvas-sense-your-city-one-week.csv
+      .then((res) => res);
+    data.map((item, index) => index < 15 && newData.push(item));
+    newData?.length && constructChart();
+  };
 
-    d3.select('#LineChart')
-      .selectAll('path')
+  loadData();
+
+  function constructChart() {
+    let xAxisItems = data.map((items) => new Date(items[onXaxis]));
+    let yAxisItems = data.map((items) => parseInt(items[onYaxis]));
+    // scaling
+    const yScale = d3
+      .scaleLinear()
+      .domain(d3.extent(yAxisItems).sort((a, b) => b - a))
+      .range([0, height - margin.bottom]);
+
+    const xScale = d3
+      .scaleTime()
+      .domain([d3.min(xAxisItems), d3.max(xAxisItems)])
+      .range([0, width - margin.left - margin.right])
+      .nice();
+
+    const svg = d3
+      .select('body')
+      .append('svg')
+      .attr('width', width)
+      .attr('height', height);
+
+    const g = svg
+      .selectAll('g')
+      .data(data)
+      .enter()
+      .append('g')
+      .attr('transform', (d) => `translate(${margin.left},${margin.top})`);
+
+    g.append('circle')
+      .attr('cx', (d) => xScale(new Date(d[onXaxis])))
+      .attr('cy', (d) => yScale(d[onYaxis]))
+      .classed('circle', true)
       .transition()
-      .duration(1000)
-      .attr('d', line);
+      .attr('r', circleRadius)
+      .duration(1000);
 
-    d3.select('#LineChart')
-      .append('g')
-      .attr('transform', 'translate(0, ' + 300 + ')')
-      .call(xAxis);
+    const line = d3
+      .line()
+      .x((d) => xScale(new Date(d[onXaxis])))
+      .y((d) => yScale(d[onYaxis]));
+    g.append('path').attr('d', line(data)).classed('line-path', true);
 
-    d3.select('#LineChart')
+    //axis
+    svg
       .append('g')
-      .attr('transform', 'translate(0, 0)')
-      .call(yAxis);
-  }, []);
+      .call(d3.axisLeft(yScale).tickSize(-width))
+      .attr('transform', `translate(${margin.left},${margin.top})`);
+
+    svg
+      .append('g')
+      .call(d3.axisBottom(xScale).tickSize(-height))
+      .attr(
+        'transform',
+        `translate(${margin.left},${height + margin.top - margin.bottom})`
+      );
+  }
 
   //   const [data, setData] = useState('');
   const [open, setOpen] = useState(false);
