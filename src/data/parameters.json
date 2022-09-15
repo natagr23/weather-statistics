@@ -3,18 +3,18 @@
     "id": 1,
     "name": "Levels",
     "imageUrl": "https://source.unsplash.com/1600x900/?stream",
-    "go": "../../pages/GraphPage"
+    "go": "../../pages/index"
   },
   {
     "id": 2,
     "name": "Precipitation",
     "imageUrl": "https://source.unsplash.com/1600x900/?precipitation",
-    "go": "../../pages/GraphPage"
+    "go": "../../pages/index"
   },
   {
     "id": 3,
     "name": "Air Pollution",
     "imageUrl": "https://source.unsplash.com/1600x900/?air",
-    "go": "../../pages/GraphPage"
+    "go": "../../pages/index"
   }
 ]
