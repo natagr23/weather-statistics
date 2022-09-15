@@ -8,7 +8,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-import Box from '@mui/material/Box';
 
 const InputGraph = () => {
   const [data, setData] = useState(null);
@@ -21,7 +20,7 @@ const InputGraph = () => {
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
-        'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json'
+        'http://fews.ideam.gov.co/colombia/jsonH/0021209920Hobs.json'
       );
       const data1 = await response.json();
       setData(data1);
@@ -32,10 +31,8 @@ const InputGraph = () => {
 
   console.log(data);
   if (data) {
-    const dataset = data.data;
-    // let minDate = dataset[0][0].substr(0, 4);
-    // minDate = new Date(minDate);
-
+    const dataset = data.obs.data;
+    console.log(dataset);
     var yearsDate = dataset.map(function (item) {
       return new Date(item[0]);
     });
