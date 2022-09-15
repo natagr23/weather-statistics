@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "name": "Discharge",
+    "name": "Levels",
     "imageUrl": "https://source.unsplash.com/1600x900/?stream",
     "go": "../../pages/GraphPage"
   },

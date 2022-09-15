@@ -23,14 +23,10 @@ const GraphPage = () => {
             // minHeight="25vh"
           >
             <Typography sx={{ m: 1 }} variant="h5">
-              Historical Photos from {`${ctx.nameParameter}`} - Fotos Históricas
-              de {`${ctx.nameParameter}`}
+              Rivers {`${ctx.nameParameter}`} current year-2022{' '}
             </Typography>
           </Box>
-          <Typography paragraph>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod
-          </Typography>
+          <Typography paragraph></Typography>
           <Box
             sx={{
               display: 'flex',

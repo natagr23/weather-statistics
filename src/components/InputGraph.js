@@ -90,8 +90,8 @@ const InputGraph = () => {
     const mouseMoving = (d) => {
       const mouse = d3.pointer(d);
       tooltip
-        .style('top', mouse[1] + 150 + 'px')
-        .style('left', mouse[0] + 120 + 'px');
+        .style('top', mouse[1] + 80 + 'px')
+        .style('left', mouse[0] + 80 + 'px');
 
       d3.select(this).style('opacity', 0.8);
     };
@@ -155,7 +155,7 @@ const InputGraph = () => {
 
   return (
     <div className="bar-container">
-      <h1 className="bar-title">Bar Chart: IDEAM 2120992 Station</h1>
+      <h1 className="bar-title">Chart: IDEAM 2120992 Station River</h1>
       <svg
         className="bar-svg"
         ref={svgRef}
