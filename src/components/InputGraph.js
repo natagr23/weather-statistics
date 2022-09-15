@@ -34,11 +34,11 @@ const InputGraph = () => {
     const dataset = data.obs.data;
     console.log(dataset);
     var yearsDate = dataset.map(function (item) {
-      return new Date(item[0]);
+      return new Date(item);
     });
-
+    console.log(yearsDate);
     var maxDate = new Date(d3.max(yearsDate));
-
+    console.log(maxDate);
     var xAxisScale = d3
       .scaleTime()
       .domain([d3.min(yearsDate), maxDate])
@@ -74,7 +74,7 @@ const InputGraph = () => {
 
         .html(
           // "<p> Date: " + data[0] + "</p>" + "<p> Billions: $" + data[1] + "</p>"
-          `<p> Date: ${data[0]}</p> <p>Billions: $${data[1]}</p>`
+          `<p> Date: ${data[0]}</p> <p>Levels: ${data[1]}m</p>`
         )
         .attr('data-date', data[0])
         .attr('data-gdp', data[1]);
@@ -143,7 +143,7 @@ const InputGraph = () => {
       .attr('transform', 'rotate(-90)')
       .attr('x', -120)
       .attr('y', 20)
-      .text('GDP (in billions)');
+      .text('Observed level (in m)');
 
     svg
       .append('g')
@@ -155,7 +155,7 @@ const InputGraph = () => {
 
   return (
     <div className="bar-container">
-      <h1 className="bar-title">Bar Chart: United States GDP</h1>
+      <h1 className="bar-title">Bar Chart: IDEAM 2120992 Station</h1>
       <svg
         className="bar-svg"
         ref={svgRef}
