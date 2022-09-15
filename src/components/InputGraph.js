@@ -6,158 +6,166 @@
 //data-canvas-sense-your-city-one-week
 //react data = await d3       .json(
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import Box from '@mui/material/Box';
 
 const InputGraph = () => {
-  const [data, setData] = React.useState([]);
+  const [data, setData] = useState(null);
+  const svgRef = useRef(null);
 
-  const width = 800;
-  const height = 400;
-  const padding = 80;
-  const barWidth = width / 275;
+  const margin = { top: 40, right: 30, bottom: 50, left: 80 },
+    width = 800,
+    height = 400;
 
-  React.useEffect(() => {
-    try {
-      fetch(
-        'https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/GDP-data.json'
-      )
-        .then((response) => response.json())
-        .then((result) => {
-          setData(result.data);
-          //console.log("running");
-          console.log(result.data);
-        });
-    } catch (e) {
-      //console.log("error");
-      console.log(e);
-    }
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(
+        'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json'
+      );
+      const data1 = await response.json();
+      setData(data1);
+    };
+
+    fetchData();
   }, []);
 
-  React.useEffect(() => {
-    //console.log("data");
-    if (data !== null) {
-      creatingBarChart();
-    }
-  }, [data]);
+  console.log(data);
+  if (data) {
+    const dataset = data.data;
+    // let minDate = dataset[0][0].substr(0, 4);
+    // minDate = new Date(minDate);
 
-  const creatingBarChart = () => {
-    var svgArea = d3
-      .select('#bar-chart')
-      .append('svg')
-      .attr('height', height + padding)
-      .attr('width', width + padding);
+    var yearsDate = dataset.map(function (item) {
+      return new Date(item[0]);
+    });
 
-    svgArea
-      .append('text')
-      .attr('transform', 'rotate(-90)')
-      .attr('x', -200)
-      .attr('y', 60)
-      .text('Gross Domestic Product');
+    var maxDate = new Date(d3.max(yearsDate));
 
-    var yearsDate = data.map((item) => new Date(item[0]));
-
-    var xMax = new Date(d3.max(yearsDate));
-    //xMax.setMonth(xMax.getMonth() + 3);
-
-    //defining a scale for x axis
-    var xScale = d3
+    var xAxisScale = d3
       .scaleTime()
-      .domain([d3.min(yearsDate), xMax])
+      .domain([d3.min(yearsDate), maxDate])
       .range([0, width]);
 
-    var xAxis = d3.axisBottom().scale(xScale);
+    const yAxisScale = d3
+      .scaleLinear()
+      .domain([
+        0,
+        d3.max(dataset, function (d) {
+          return d[1];
+        }),
+      ])
+      .range([height, 0]);
 
-    svgArea
-      .append('g')
-      .call(xAxis) //.call(xAxis.ticks(d3.timeYear))
-      .attr(
-        'transform',
-        'translate(' + padding / 2 + ',' + (height + padding / 2) + ')'
-      )
-      .attr('id', 'x-axis');
+    const xAxis = d3.axisBottom().scale(xAxisScale);
+    const yAxis = d3.axisLeft(yAxisScale);
 
-    let yMax = d3.max(data, (d) => d[1]);
+    const tooltip = d3
+      .select('body')
+      .append('div')
 
-    let yScale = d3.scaleLinear().domain([0, yMax]).range([0, height]);
+      .attr('id', 'tooltip')
+      .style('position', 'absolute')
+      .style('padding', '4px')
+      .style('background', '#fff')
+      .style('border', '1px solid #000');
 
-    let yAxisScale = d3.scaleLinear().domain([0, yMax]).range([height, 0]);
+    const mouseoverHandler = (d, data) => {
+      // console.log(data);
+      tooltip.style('opacity', 0.8);
+      tooltip
 
-    let yAxis = d3.axisLeft().scale(yAxisScale);
+        .html(
+          // "<p> Date: " + data[0] + "</p>" + "<p> Billions: $" + data[1] + "</p>"
+          `<p> Date: ${data[0]}</p> <p>Billions: $${data[1]}</p>`
+        )
+        .attr('data-date', data[0])
+        .attr('data-gdp', data[1]);
 
-    svgArea
-      .append('g')
-      .call(yAxis)
-      .attr('id', 'y-axis')
-      .attr('transform', 'translate(' + padding / 2 + ', ' + padding / 2 + ')');
+      d3.select(this).style('opacity', 0.1);
+    };
 
-    let svgData = svgArea
-      .selectAll('rect')
-      .data(data)
+    const mouseoutHandler = (d) => {
+      tooltip.style('opacity', 0);
+      d3.select('opacity', 1);
+    };
+
+    const mouseMoving = (d) => {
+      const mouse = d3.pointer(d);
+      tooltip
+        .style('top', mouse[1] + 150 + 'px')
+        .style('left', mouse[0] + 120 + 'px');
+
+      d3.select(this).style('opacity', 0.8);
+    };
+
+    const svgEl = d3.select(svgRef.current);
+
+    const svg =
+      //  d3.select("#barGraph")
+      svgEl
+        .append('svg')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .attr('class', 'bar-chart-svg-component')
+        .append('g')
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+    svg
+      .selectAll('bar')
+      .data(dataset)
       .enter()
       .append('rect')
-      .attr('x', (d, i) => {
-        return i * barWidth + padding / 2;
-      })
-      .attr('y', (d) => {
-        return height + padding / 2 - yScale(d[1]);
-      })
-      .attr('width', barWidth)
-      .attr('height', (d) => {
-        return yScale(d[1]) + 'px';
-      })
-      .attr('class', 'bar')
-      .attr('data-date', (d) => {
+      .attr('data-date', function (d, i) {
+        // console.log(d[0]);
         return d[0];
       })
-      .attr('data-gdp', (d) => {
+      .attr('data-gdp', (d, i) => {
         return d[1];
-      });
+      })
+      .attr('class', 'bar')
+      .style('fill', 'darkblue')
 
-    var tooltip = d3
-      .select('#bar-chart')
-      .append('div')
-      .attr('id', 'tooltip')
-      .style('opacity', 0);
+      .attr('x', (d, i) => i * (width / dataset.length))
+      .attr('y', (d) => yAxisScale(d[1]))
+      .attr('width', width / dataset.length)
+      .attr('height', (d) => height - yAxisScale(d[1]))
+      .on('mouseover', mouseoverHandler)
+      .on('mousemove', mouseMoving)
+      .on('mouseout', mouseoutHandler);
 
-    const mouseover = (event, d) => {
-      tooltip.style('opacity', 0.8);
-      tooltip.html(d[0] + '<br>' + '$' + d[1] + ' Billion');
+    svg
+      .append('g')
+      .attr('id', 'x-axis')
+      .attr('class', 'x axis')
+      .attr('transform', 'translate(0, ' + height + ')')
+      .call(xAxis);
 
-      var i;
+    svg
+      .append('text')
+      .attr('transform', 'rotate(-90)')
+      .attr('x', -120)
+      .attr('y', 20)
+      .text('GDP (in billions)');
 
-      data.forEach((item, index) => {
-        if (item === d) {
-          i = index;
-        }
-      });
+    svg
+      .append('g')
+      .attr('id', 'y-axis')
+      .attr('class', 'y axis')
 
-      tooltip
-        .style('left', padding + i * barWidth + 'px')
-        .style('top', height - 100 + 'px')
-        .attr('data-date', d[0]);
-    };
+      .call(yAxis);
+  }
 
-    const mouseout = () => {
-      tooltip.style('opacity', 0);
-    };
-
-    svgData.on('mouseover', mouseover).on('mouseout', mouseout);
-
-    return (
-      <>
-        <div>
-          <div id="main">
-            <div id="container">
-              <div id="title">United State GDP</div>
-              <div id="bar-chart"></div>
-            </div>
-          </div>
-        </div>
-      </>
-    );
-  };
+  return (
+    <div className="bar-container">
+      <h1 className="bar-title">Bar Chart: United States GDP</h1>
+      <svg
+        className="bar-svg"
+        ref={svgRef}
+        width={width + margin.left + margin.right}
+        height={height * 1.3}
+      />
+    </div>
+  );
 };
-
 export default InputGraph;
