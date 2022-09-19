@@ -1,3 +1,6 @@
+//https://www.hashbangcode.com/article/using-htaccess-redirect-https-http
+//https://support.plesk.com/hc/en-us/articles/360011068439-How-to-disable-Permanent-SEO-safe-301-redirect-from-HTTP-to-HTTPS-by-default-in-Plesk-Obsidian-
+
 //await response.json() graph xy
 
 //https://observablehq.com/@d3/line-with-tooltip
@@ -8,6 +11,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
+import { select, axisBottom, axisRight, scaleLinear, scaleBand } from 'd3';
+// import ResizeObserver from 'resize-observer-polyfill';
 
 const InputGraph = () => {
   const [data, setData] = useState(null);
@@ -33,18 +38,18 @@ const InputGraph = () => {
   if (data) {
     const dataset = data.obs.data;
     console.log(dataset);
-    var yearsDate = dataset.map(function (item) {
-      return new Date(item);
+    let yearsDate = dataset.map(function (item) {
+      return new Date(item[0]);
     });
+    // console.log(JSON.stringify(yearsDate));
     console.log(yearsDate);
-    var maxDate = new Date(d3.max(yearsDate));
+    let maxDate = new Date(d3.max(yearsDate));
+    let minDate = new Date(yearsDate[0]);
+    console.log(minDate);
     console.log(maxDate);
-    var xAxisScale = d3
-      .scaleTime()
-      .domain([d3.min(yearsDate), maxDate])
-      .range([0, width]);
+    let xAxisScale = d3.scaleTime().domain(minDate, maxDate).range([0, width]);
 
-    const yAxisScale = d3
+    let yAxisScale = d3
       .scaleLinear()
       .domain([
         0,
@@ -77,7 +82,7 @@ const InputGraph = () => {
           `<p> Date: ${data[0]}</p> <p>Levels: ${data[1]}m</p>`
         )
         .attr('data-date', data[0])
-        .attr('data-gdp', data[1]);
+        .attr('data-levels', data[1]);
 
       d3.select(this).style('opacity', 0.1);
     };
@@ -117,7 +122,7 @@ const InputGraph = () => {
         // console.log(d[0]);
         return d[0];
       })
-      .attr('data-gdp', (d, i) => {
+      .attr('data-levels', (d, i) => {
         return d[1];
       })
       .attr('class', 'bar')
@@ -160,7 +165,7 @@ const InputGraph = () => {
         className="bar-svg"
         ref={svgRef}
         width={width + margin.left + margin.right}
-        height={height * 1.3}
+        height={height * 1.5}
       />
     </div>
   );
