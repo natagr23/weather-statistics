@@ -23,7 +23,7 @@ const GraphPage = () => {
             // minHeight="25vh"
           >
             <Typography sx={{ m: 1 }} variant="h5">
-              Rivers {`${ctx.nameParameter}`} current year-2022{' '}
+              {`${ctx.nameParameter}`} current year-2022{' '}
             </Typography>
           </Box>
           <Typography paragraph></Typography>

@@ -1,42 +1,34 @@
-//https://www.hashbangcode.com/article/using-htaccess-redirect-https-http
-//https://support.plesk.com/hc/en-us/articles/360011068439-How-to-disable-Permanent-SEO-safe-301-redirect-from-HTTP-to-HTTPS-by-default-in-Plesk-Obsidian-
-
-//await response.json() graph xy
-
-//https://observablehq.com/@d3/line-with-tooltip
-
-//https://github.com/jgs982/react-d3js/blob/main/src/App.js
-//data-canvas-sense-your-city-one-week
-//react data = await d3       .json(
-
 import React, { useState, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-import { select, axisBottom, axisRight, scaleLinear, scaleBand } from 'd3';
-// import ResizeObserver from 'resize-observer-polyfill';
+import station_21209920 from '../data/0021209920Hobs.json';
 
 const InputGraph = () => {
-  const [data, setData] = useState(null);
+  // const [data, setData] = useState(null);
   const svgRef = useRef(null);
 
   const margin = { top: 40, right: 30, bottom: 50, left: 80 },
     width = 800,
     height = 400;
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const response = await fetch(
+  //       'http://fews.ideam.gov.co/colombia/jsonH/0021209920Hobs.json'
+  //     );
+  //     const data1 = await response.json();
+  //     setData(data1);
+  //   };
+
+  //   fetchData();
+  // }, []);
+
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(
-        'http://fews.ideam.gov.co/colombia/jsonH/0021209920Hobs.json'
-      );
-      const data1 = await response.json();
-      setData(data1);
-    };
+    const data1 = station_21209920;
+    // setData(station_21209920);
 
-    fetchData();
-  }, []);
+    // console.log(data);
 
-  console.log(data);
-  if (data) {
-    const dataset = data.obs.data;
+    const dataset = data1.obs.data;
     console.log(dataset);
     let yearsDate = dataset.map(function (item) {
       return new Date(item[0]);
@@ -52,7 +44,6 @@ const InputGraph = () => {
       .scaleTime()
       .domain([minDate, maxDate])
       .range([0, width]);
-    let xAxisGenerator = d3.axisBottom(xAxisScale);
 
     let yAxisScale = d3
       .scaleLinear()
@@ -161,7 +152,7 @@ const InputGraph = () => {
       .attr('class', 'y axis')
 
       .call(yAxis);
-  }
+  }, []);
 
   return (
     <div className="bar-container">
