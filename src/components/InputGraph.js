@@ -42,12 +42,17 @@ const InputGraph = () => {
       return new Date(item[0]);
     });
     // console.log(JSON.stringify(yearsDate));
-    console.log(yearsDate);
+    // console.log(yearsDate);
     let maxDate = new Date(d3.max(yearsDate));
     let minDate = new Date(yearsDate[0]);
     console.log(minDate);
     console.log(maxDate);
-    let xAxisScale = d3.scaleTime().domain(minDate, maxDate).range([0, width]);
+
+    let xAxisScale = d3
+      .scaleTime()
+      .domain([minDate, maxDate])
+      .range([0, width]);
+    let xAxisGenerator = d3.axisBottom(xAxisScale);
 
     let yAxisScale = d3
       .scaleLinear()
@@ -59,7 +64,7 @@ const InputGraph = () => {
       ])
       .range([height, 0]);
 
-    const xAxis = d3.axisBottom().scale(xAxisScale);
+    const xAxis = d3.axisBottom(xAxisScale);
     const yAxis = d3.axisLeft(yAxisScale);
 
     const tooltip = d3
