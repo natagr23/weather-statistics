@@ -3,32 +3,33 @@ import * as d3 from 'd3';
 import station_21209920 from '../data/0021209920Hobs.json';
 
 const InputGraph = () => {
-  // const [data, setData] = useState(null);
+  const [data, setData] = useState(null);
   const svgRef = useRef(null);
 
   const margin = { top: 40, right: 30, bottom: 50, left: 80 },
     width = 800,
     height = 400;
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const response = await fetch(
-  //       'http://fews.ideam.gov.co/colombia/jsonH/0021209920Hobs.json'
-  //     );
-  //     const data1 = await response.json();
-  //     setData(data1);
-  //   };
-
-  //   fetchData();
-  // }, []);
-
   useEffect(() => {
-    const data1 = station_21209920;
-    // setData(station_21209920);
+    const fetchData = async () => {
+      const response = await fetch(
+        'https://raw.githubusercontent.com/natagr23/weather-statistics/main/src/data/0021209920Hobs.json'
+      );
+      const data1 = await response.json();
+      setData(data1);
+    };
 
-    // console.log(data);
+    fetchData();
+  }, []);
 
-    const dataset = data1.obs.data;
+  // useEffect(() => {
+  //   const data1 = station_21209920;
+  // setData(station_21209920);
+
+  // console.log(data);
+  console.log(data);
+  if (data) {
+    const dataset = data.obs.data;
     console.log(dataset);
     let yearsDate = dataset.map(function (item) {
       return new Date(item[0]);
@@ -152,8 +153,8 @@ const InputGraph = () => {
       .attr('class', 'y axis')
 
       .call(yAxis);
-  }, []);
-
+    // }, []);
+  }
   return (
     <div className="bar-container">
       <h1 className="bar-title">Chart: IDEAM 2120992 Station River</h1>
